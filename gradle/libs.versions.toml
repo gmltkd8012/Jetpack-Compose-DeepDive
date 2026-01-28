@@ -16,7 +16,7 @@ lifecycleViewmodelCompose = "2.10.0"
 activityCompose = "1.12.2"
 composeBom = "2026.01.00"
 # Navigation
-navigationCompose = "2.10.0"
+navigationCompose = "2.7.7"
 # Coil - 이미지 로딩
 coil = "3.0.4"
 # Coroutines
