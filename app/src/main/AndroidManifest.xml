@@ -22,6 +22,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".XmlComposeActivity"
+            android:exported="false"
+            android:label="Compose + XML"
+            android:theme="@style/Theme.JetpackComposeDeepDive.AppCompat" />
     </application>
 
 </manifest>

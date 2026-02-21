@@ -2,4 +2,11 @@
 <resources>
 
     <style name="Theme.JetpackComposeDeepDive" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <!-- AppCompat theme for XML-based activities -->
+    <style name="Theme.JetpackComposeDeepDive.AppCompat" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorPrimaryDark">@color/purple_700</item>
+        <item name="colorAccent">@color/teal_200</item>
+    </style>
 </resources>
