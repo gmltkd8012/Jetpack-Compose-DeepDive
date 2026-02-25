@@ -1,6 +1,6 @@
 [versions]
 # Android Gradle Plugin - 안정 버전 (8.x 시리즈)
-agp = "8.12.0"
+agp = "8.9.1"
 # Kotlin - 최신 안정 버전 (2026.01)
 kotlin = "2.3.0"
 # AndroidX Core
@@ -26,6 +26,9 @@ appcompat = "1.7.0"
 constraintlayout = "2.2.0"
 recyclerview = "1.4.0"
 cardview = "1.0.0"
+
+# compose-stability-analyzer with skydove
+stabilityAnalyzerVersion = "0.7.0"
 
 [libraries]
 # Core Android
@@ -83,4 +86,4 @@ androidx-cardview = { group = "androidx.cardview", name = "cardview", version.re
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-
+stability-analyzer = { id = "com.github.skydoves.compose.stability.analyzer", version.ref = "stabilityAnalyzerVersion" }
