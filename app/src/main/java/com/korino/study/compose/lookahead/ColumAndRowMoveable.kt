@@ -1,5 +1,6 @@
 package com.korino.study.compose.lookahead
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.movableContentOf
 import androidx.compose.runtime.mutableStateOf
@@ -102,6 +104,7 @@ fun  LookAheadMovableContent () {
     var isInColumn by remember { mutableStateOf( true ) }
 
     LookaheadScope {
+        SideEffect { Log.d("Test", "LookaheadScope 람다 recompose") }
         val items = remember {
             movableContentOf {
                 colors.forEach { color ->

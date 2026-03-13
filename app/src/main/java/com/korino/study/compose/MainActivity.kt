@@ -62,6 +62,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.round
 import androidx.compose.ui.window.Dialog
 import com.korino.study.compose.lookahead.LookaheadExampleScreen
+import com.korino.study.compose.subcompose.SubcomposeLayoutAnimationDemo
 import com.korino.study.compose.ui.theme.JetpackComposeDeepDiveTheme
 import com.skydoves.compose.stability.runtime.TraceRecomposition
 
@@ -102,48 +103,45 @@ class MainActivity : ComponentActivity() {
 //
 //    }
 //
-//    @TraceRecomposition
-//    @Composable
-//    fun SmoothTransitionBox(
-//        isExpanded: Boolean= false,
-//        onClick: () -> Unit
-//    ) {
-//        var sizeAnimation = remember {
-//            Animatable(IntSize(100, 100), IntSize.VectorConverter)
-//        }
-//
-//        LaunchedEffect(isExpanded) {
-//            // Step 1: 목표 크기 결정
-//            val targetSize = IntSize(
-//                width = if (isExpanded) 300 else 100,
-//                height = if (isExpanded) 300 else 100
-//            )
-//
-//            sizeAnimation.animateTo(targetSize)
-//            Log.d("heesang", "SmoothTransitionBox: ${sizeAnimation.value}")
-//        }
-//
-//        LookaheadScope {
-//            Box(
-//                modifier = Modifier
-//                    .background(Color.Blue)
-//                    .clickable { onClick() }
-//                    .approachLayout(
-//                        isMeasurementApproachInProgress = { lookaheadSize ->
-//                            sizeAnimation.value != lookaheadSize
-//                        },
-//                        approachMeasure = { measurable, _ ->
-//                            val (width, height) = sizeAnimation.value
-//                            val placeable = measurable.measure(
-//                                Constraints.fixed(width, height)
-//                            )
-//
-//                            layout(width, height) {
-//                                placeable.place(0, 0)
-//                            }
-//                        }
-//                    )
-//            )
-//        }
-//    }
+    @TraceRecomposition
+    @Composable
+    fun SmoothTransitionBox() {
+        var isExpanded by remember { mutableStateOf(false) }
+
+        var sizeAnimation = remember {
+            Animatable(IntSize(100, 100), IntSize.VectorConverter)
+        }
+
+        LaunchedEffect(isExpanded) {
+            val targetSize = IntSize(
+                width = if (isExpanded) 300 else 100,
+                height = if (isExpanded) 300 else 100
+            )
+
+            sizeAnimation.animateTo(targetSize)
+        }
+
+
+        Box(
+            modifier = Modifier
+                .background(Color.Blue)
+                .clickable { isExpanded = !isExpanded }
+                .approachLayout(
+                    isMeasurementApproachInProgress = { lookaheadSize ->
+                        sizeAnimation.value != lookaheadSize
+                    },
+                    approachMeasure = { measurable, _ ->
+                        val (width, height) = sizeAnimation.value
+                        val placeable = measurable.measure(
+                            Constraints.fixed(width, height)
+                        )
+
+                        layout(width, height) {
+                            placeable.place(0, 0)
+                        }
+                    }
+                )
+        )
+    }
+
 }
