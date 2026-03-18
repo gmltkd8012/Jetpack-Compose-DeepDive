@@ -19,5 +19,4 @@ import androidx.compose.runtime.NonRestartableComposable
 @Composable
 fun SlotScreen() {
     Text(text = "text")
-    Button(onClick = {}) { }
 }
