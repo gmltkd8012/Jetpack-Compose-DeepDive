@@ -4,6 +4,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.NonRestartableComposable
+import androidx.compose.runtime.remember
+
 //
 //@Composable
 //@NonRestartableComposable
@@ -18,5 +20,6 @@ import androidx.compose.runtime.NonRestartableComposable
 
 @Composable
 fun SlotScreen() {
+    val count = remember { 0 }
     Text(text = "text")
 }
