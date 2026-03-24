@@ -20,6 +20,6 @@ import androidx.compose.runtime.remember
 
 @Composable
 fun SlotScreen() {
-    val count = remember { 0 }
+    val count = remember { 3 }
     Text(text = "text")
 }
