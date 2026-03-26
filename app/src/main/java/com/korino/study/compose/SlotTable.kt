@@ -4,6 +4,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.NonRestartableComposable
+import androidx.compose.runtime.StableMarker
 import androidx.compose.runtime.remember
 
 //
@@ -17,6 +18,12 @@ import androidx.compose.runtime.remember
 //    }
 //}
 
+
+@StableMarker
+data class User(
+    val name: String,
+    val age: Int,
+)
 
 @Composable
 fun SlotScreen() {

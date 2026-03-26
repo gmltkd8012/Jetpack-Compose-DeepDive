@@ -21,22 +21,22 @@ import androidx.compose.runtime.Composable
 //}
 
 
-/**
- * 불안정 추론 경우
- */
-// 1. var 사용 (가변)
-class User(var name: String)
-
-// 2. 내부 가변 상태
-class Counter {
-    private var count: Int = 0  // private여도 불안정!
-    fun getCount(): Int = count
-    fun increment() { count++ }
-}
-
-// 3. 인터페이스 (구현체를 알 수 없음)
-@Composable
-fun <T> MyList(items: List<T>) {}  // List는 ArrayList일 수도 있음
-
-// 4. 제네릭 타입 (런타임 전까지 알 수 없음)
-class Wrapper<T>(val value: T)  // T가 뭔지 모름
+///**
+// * 불안정 추론 경우
+// */
+//// 1. var 사용 (가변)
+//class User(var name: String)
+//
+//// 2. 내부 가변 상태
+//class Counter {
+//    private var count: Int = 0  // private여도 불안정!
+//    fun getCount(): Int = count
+//    fun increment() { count++ }
+//}
+//
+//// 3. 인터페이스 (구현체를 알 수 없음)
+//@Composable
+//fun <T> MyList(items: List<T>) {}  // List는 ArrayList일 수도 있음
+//
+//// 4. 제네릭 타입 (런타임 전까지 알 수 없음)
+//class Wrapper<T>(val value: T)  // T가 뭔지 모름
