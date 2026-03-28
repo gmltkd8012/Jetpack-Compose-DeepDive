@@ -19,11 +19,6 @@ import androidx.compose.runtime.remember
 //}
 
 
-@StableMarker
-data class User(
-    val name: String,
-    val age: Int,
-)
 
 @Composable
 fun SlotScreen() {
