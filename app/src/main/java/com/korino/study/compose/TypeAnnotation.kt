@@ -31,56 +31,25 @@ data class StableUser(val name: String)
 
 
 data class User(
-    val name: String = "Korino",
+    var name: String = "Korino",
+    var friends: List<String> = emptyList()
 )
 
 @Composable
-fun TypeAnnotationScreen() {
-    var user by remember { mutableStateOf(User()) }
+fun TypeAnnotationScreen(trigger: Int) {
+
+    // trigger 가 바뀔 때마다 TypeAnnotationScreen 이 recomposition
+    // → user 가 매번 새 인스턴스로 생성됨 (값은 동일)
+    val user = User(name = "Korino", friends = listOf("A", "B"))
+
+    UserCard(user)
 
 
-    Column {
-        UnstableCard(user)
-
-        Spacer(Modifier.height(24.dp))
-
-        Button(
-            onClick = {
-                user = user.copy()
-            }
-        ) {
-            Text("Recomposition 트리거 버튼")
-        }
-    }
 }
 
 @Composable
-fun UnstableCard(user: User) {
-    SideEffect { Log.d("Recomposition", "UnstableCard recomposed") }
-    Column() {
-        Text(user.name)
-    }
-}
-
-@Composable
-fun ImmutableCard(user: ImmutableUser) {
-    SideEffect { Log.d("Recomposition", "ImmutableCard recomposed") }
+fun UserCard(user: User) {
+    SideEffect { Log.d("Recomposition", "UserCard recomposed") }
     Text(user.name)
 }
 
-@Composable
-fun StableCard(user: StableUser) {
-    SideEffect { Log.d("Recomposition", "StableCard recomposed") }
-    Text(user.name)
-}
-//```
-//
-//---
-//
-//## 예상 결과
-//
-//버튼 클릭 시 `trigger` 값이 바뀌어 `TestScreen` 이 recomposition 되는데:
-//```
-//UnstableCard recomposed   ← 매번 출력 (skip 안됨)
-//ImmutableCard recomposed  ← 최초 1회만 출력
-//StableCard recomposed     ← 최초 1회만 출력

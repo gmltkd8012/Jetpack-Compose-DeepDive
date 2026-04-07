@@ -30,6 +30,7 @@ import androidx.compose.runtime.Composer
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.movableContentOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -75,7 +76,12 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center,
             ) {
-                TypeAnnotationScreen()
+                var trigger by remember { mutableIntStateOf(0) }
+                Button(onClick = { trigger++ }) {
+                    Text("trigger = $trigger")
+                }
+
+                TypeAnnotationScreen(trigger)
             }
         }
     }
