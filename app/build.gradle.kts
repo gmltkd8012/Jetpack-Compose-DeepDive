@@ -44,8 +44,8 @@ android {
     }
 
     composeCompiler {
-        enableStrongSkippingMode.set(true)
-        enableIntrinsicRemember.set(true)
+        enableStrongSkippingMode.set(false)
+        enableIntrinsicRemember.set(false)
 
         reportsDestination.set(layout.buildDirectory.dir("compose_reports"))
         metricsDestination.set(layout.buildDirectory.dir("compose_metrics"))

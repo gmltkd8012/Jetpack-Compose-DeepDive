@@ -1,6 +1,7 @@
 package com.korino.study.compose
 
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -36,14 +37,14 @@ class MainViewModel : ViewModel() {
 }
 
 // Unstable: var 프로퍼티 + List → Compose가 변경 감지 불가 → Skipping 불가
+@Stable
 data class UnStableUser(
-    var name: String = "Korino",
-    var age: Int = 30,
-    var friends: List<String> = emptyList()
+    val name: String = "Korino",
+    val age: Int = 30,
+    val friends: List<String> = emptyList()
 )
 
 // Stable: @Immutable + val 프로퍼티 → Compose가 equals로 비교 후 Skipping 가능
-@Immutable
 data class StableUser(
     val name: String = "Korino",
     val age: Int = 30,
