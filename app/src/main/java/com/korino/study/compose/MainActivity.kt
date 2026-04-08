@@ -1,158 +1,155 @@
 package com.korino.study.compose
 
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.AnimationVector2D
-import androidx.compose.animation.core.DeferredTargetAnimation
-import androidx.compose.animation.core.ExperimentalAnimatableApi
-import androidx.compose.animation.core.VectorConverter
-import androidx.compose.animation.core.animateSizeAsState
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Composer
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.movableContentOf
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.layout.ApproachLayoutModifierNode
-import androidx.compose.ui.layout.ApproachMeasureScope
-import androidx.compose.ui.layout.Layout
-import androidx.compose.ui.layout.LayoutCoordinates
-import androidx.compose.ui.layout.LookaheadScope
-import androidx.compose.ui.layout.Measurable
-import androidx.compose.ui.layout.MeasureResult
-import androidx.compose.ui.layout.Placeable
-import androidx.compose.ui.layout.SubcomposeLayout
-import androidx.compose.ui.layout.approachLayout
-import androidx.compose.ui.layout.layout
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Constraints
-import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.round
-import androidx.compose.ui.window.Dialog
-import com.korino.study.compose.lookahead.LookaheadExampleScreen
-import com.korino.study.compose.subcompose.SubcomposeLayoutAnimationDemo
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.korino.study.compose.ui.theme.JetpackComposeDeepDiveTheme
-import com.skydoves.compose.stability.runtime.TraceRecomposition
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center,
-            ) {
-                var trigger by remember { mutableIntStateOf(0) }
-                Button(onClick = { trigger++ }) {
-                    Text("trigger = $trigger")
-                }
-
-                TypeAnnotationScreen(trigger)
+            Scaffold { paddingValues ->
+                MainScreen(modifier = Modifier.padding(paddingValues))
             }
         }
     }
+}
 
-//    @TraceRecomposition
-//    @Composable
-//    fun TransitionBox(
-//        isExpanded: Boolean = false,
-//        onClick: () -> Unit
-//    ) {
-//        val size by animateSizeAsState(
-//            targetValue = if (isExpanded) Size(300F, 300F) else Size(100F, 100F),
-//            animationSpec = tween(1000)
-//        )
-//
-//        Box(
-//            modifier = Modifier
-//                .layout { measurable, _ ->
-//                    val sizeInt = size.width.toInt()
-//                    val placeable = measurable.measure(
-//                        Constraints.fixed(sizeInt, sizeInt)
-//                    )
-//                    layout(sizeInt, sizeInt) {
-//                        placeable.place(0, 0)
-//                    }
-//                }
-//                .background(Color.Blue)
-//                .clickable { onClick() }
-//        )
-//
-//    }
-//
-    @TraceRecomposition
-    @Composable
-    fun SmoothTransitionBox() {
-        var isExpanded by remember { mutableStateOf(false) }
+@Composable
+fun MainScreen(
+    viewModel: MainViewModel = viewModel(),
+    modifier: Modifier = Modifier
+) {
+    // ViewModel State 를 MainScreen 이 직접 읽음
+    // → title 이 바뀌면 MainScreen 전체가 recompose → 자식 재호출 보장
+    val title by viewModel.title
+    val user by viewModel.user
+    val stableUser by viewModel.stableUser
 
-        var sizeAnimation = remember {
-            Animatable(IntSize(100, 100), IntSize.VectorConverter)
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Text(text = title, style = MaterialTheme.typography.titleMedium)
+
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            // User 값은 그대로, title 만 변경 → MainScreen recompose
+            // → UnstableUserScreen: Unstable 이므로 Skip 불가 → recompose
+            // → StableUserScreen: Stable 이고 값 동일 → Skip
+            Button(onClick = { viewModel.updateTitle() }) {
+                Text("타이틀만 변경")
+            }
+            // 실제 User 데이터 변경 → 둘 다 recompose
+            Button(onClick = { viewModel.updateUser() }) {
+                Text("User 변경")
+            }
         }
 
-        LaunchedEffect(isExpanded) {
-            val targetSize = IntSize(
-                width = if (isExpanded) 300 else 100,
-                height = if (isExpanded) 300 else 100
-            )
+        Spacer(modifier = Modifier.height(8.dp))
 
-            sizeAnimation.animateTo(targetSize)
-        }
-
-
-        Box(
-            modifier = Modifier
-                .background(Color.Blue)
-                .clickable { isExpanded = !isExpanded }
-                .approachLayout(
-                    isMeasurementApproachInProgress = { lookaheadSize ->
-                        sizeAnimation.value != lookaheadSize
-                    },
-                    approachMeasure = { measurable, _ ->
-                        val (width, height) = sizeAnimation.value
-                        val placeable = measurable.measure(
-                            Constraints.fixed(width, height)
-                        )
-
-                        layout(width, height) {
-                            placeable.place(0, 0)
-                        }
-                    }
-                )
+        ParentScreen(
+            title = title,
+            user = user,
+            stableUser = stableUser
         )
     }
+}
 
+// 트리거 용 부모 Composable
+@Composable
+fun ParentScreen(
+    title: String,
+    user: UnStableUser,
+    stableUser: StableUser,
+) {
+    Column {
+        // Unstable User: var 프로퍼티 + List<String> → Skipping 불가
+        // 부모가 Recomposition되면 User가 바뀌지 않아도 함께 Recomposition됨
+        UnstableUserScreen(user = user)
+
+        // Stable User: @Immutable + val 프로퍼티 → Skipping 가능
+        // 부모가 Recomposition되어도 값이 같으면 Recomposition 건너뜀
+        StableUserScreen(user = stableUser)
+    }
+}
+
+@Composable
+fun UnstableUserScreen(user: UnStableUser) {
+    val count = remember { mutableIntStateOf(0) }
+    SideEffect { count.value++ }
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFEBEE))
+    ) {
+        Column(modifier = Modifier.padding(12.dp)) {
+            Text(
+                text = "Unstable User (var 프로퍼티)",
+                style = MaterialTheme.typography.titleMedium
+            )
+            Text(
+                text = "Recomposition 횟수: ${count.value}",
+                color = Color.Red,
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text("이름: ${user.name}")
+            Text("나이: ${user.age}")
+            Text("친구: ${user.friends.ifEmpty { listOf("없음") }.joinToString()}")
+        }
+    }
+}
+
+@Composable
+fun StableUserScreen(user: StableUser) {
+    val count = remember { mutableIntStateOf(0) }
+    SideEffect { count.value++ }
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFE8F5E9))
+    ) {
+        Column(modifier = Modifier.padding(12.dp)) {
+            Text(
+                text = "Stable User (@Immutable + val 프로퍼티)",
+                style = MaterialTheme.typography.titleMedium
+            )
+            Text(
+                text = "Recomposition 횟수: ${count.value}",
+                color = Color(0xFF2E7D32),
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text("이름: ${user.name}")
+            Text("나이: ${user.age}")
+        }
+    }
 }
